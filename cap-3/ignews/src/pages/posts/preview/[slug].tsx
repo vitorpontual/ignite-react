@@ -51,7 +51,6 @@ const PostPreview = ({ post }: PostPreviewProps) => {
   )
 }
 
-
 export const getStaticPaths = () => {
   return {
     paths: [],

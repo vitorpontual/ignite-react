@@ -70,7 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
       } catch (err) {
         // sentry, bugsnag
-        return res.json({error: 'Webhook handler fail'})
+        return res.json({error: 'Webhook handler failed'})
       }
   }
 

@@ -16,7 +16,7 @@ export const theme =extendTheme({
     }
   },
   fonts: {
-    heading: 'Roboo',
+    heading: 'Roboto',
     body: 'Roboto'
   },
   styles: {

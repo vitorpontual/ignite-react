@@ -10,7 +10,7 @@ export function Profile({ showProfileData = true }: ProfileProps) {
       {showProfileData && (
         <Box mr='4' textAlign='right'>
           <Text>Vitor Pontual</Text>
-          <Text color='gray.300' fontsize='small'>vitorpguedes@me.com</Text>
+          <Text color='gray.300' fontSize='small'>vitorpguedes@me.com</Text>
         </Box>
       )}
       <Avatar size='md' name='Vitor Pontual' src='https://avatars.githubusercontent.com/u/42771088?v=4' />

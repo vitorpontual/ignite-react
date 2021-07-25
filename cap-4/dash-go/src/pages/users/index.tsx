@@ -1,24 +1,46 @@
-import { Box, Flex, Heading, Button, Icon, Table, Thead, Tr, Th, Td, Checkbox, Tbody, Text, useBreakpointValue, Spinner } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, Link, Flex, Heading, Button, Icon, Table, Thead, Tr, Th, Td, Checkbox, Tbody, Text, useBreakpointValue, Spinner } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
+import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { SideBar } from "../../components/SideBar";
 import { api } from "../../services/api";
-import { useUsers } from "../../services/hooks/userUsers";
+import { getUsers, useUsers } from "../../services/hooks/userUsers";
+import { queryClient } from "../../services/queryClient";
 
-export default function UserList() {
+// type User = {
+//   id: string;
+//   name: string;
+//   email: string;
+//   createdAt: string;
+// }
+
+export default function UserList(/*users: User */) {
   const [page, setPage] = useState(1)
-  const { data, isLoading, isFetched,  error } = useUsers(page)
-
-
+  const { data, isLoading, isFetched, error } = useUsers(page,
+  //   {
+  //   initialData: users
+  // }
+  )
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   })
+
+  async function handlePrefetchUser( userId: string){
+
+    await queryClient.prefetchQuery(['user', userId], async () => {
+      const response = await api.get(`users/${userId}`)
+
+      return response.data;
+    }, {
+      staleTime: 1000 * 60 * 10 // 10 minutes
+    })
+  }
 
   return (
     <Flex direction='column' h='100vh'>
@@ -29,13 +51,13 @@ export default function UserList() {
         <Box flex='1' borderRadius={8} bg="gray.800" p={['1', '4', '6']}>
           <Flex mb='1' justify='space-between' align='center'>
             <Heading size='lg' fontWeight='normal'>Usuários
-            
-            { !isLoading && isFetched && <Spinner size='sm' color='gray.300'ml='4' />}</Heading>
-            <Link href='/users/create' passHref>
+
+              {!isLoading && isFetched && <Spinner size='sm' color='gray.300' ml='4' />}</Heading>
+            <NextLink href='/users/create' passHref>
 
               {isWideVersion ? (<Button as='a' size='sm' fontSize='sm' colorScheme='pink' leftIcon={<Icon as={RiAddLine} fontSize='20' />}>Criar novo</Button>) : (<Button as='a' size='sm' fontSize='sm' colorScheme='pink' ><Icon as={RiAddLine} fontSize='20' /></Button>)}
 
-            </Link>
+            </NextLink>
           </Flex>
           {isLoading ? (
             <Flex justify='center'>
@@ -67,7 +89,9 @@ export default function UserList() {
                         </Td>
                         <Td>
                           <Box>
-                            <Text fontWeight='bold'>{user.name}</Text>
+                            <Link color='purple.400' onMouseEnter={() => handlePrefetchUser(user.id)}>
+                              <Text fontWeight='bold'>{user.name}</Text>
+                            </Link>
                             <Text fontSize='sm' color='gray.300'>{user.email}</Text>
 
                           </Box>
@@ -92,3 +116,13 @@ export default function UserList() {
     </Flex>
   )
 }
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const { users, totalCount} = await getUsers(1)
+
+//   return {
+//     props: {
+//       users,
+//     }
+//   }
+// }

@@ -1,25 +1,38 @@
+import { List, AutoSizer, ListRowRenderer } from 'react-virtualized'
 import { ProductItem } from "./ProductItem";
 
 type SearchResultsProps = {
-   totalPrice: number;
-   results : Array<{
-      id: number;
-      price: number;
-      priceFormatted: string;
-      title: string;
-   }>
-   onAddToWishList: (id: number) => void
+  totalPrice: number;
+  results: Array<{
+    id: number;
+    price: number;
+    priceFormatted: string;
+    title: string;
+  }>
+  onAddToWishList: (id: number) => void
 }
 
-export function SearchResults({totalPrice, results, onAddToWishList }: SearchResultsProps) {
-  return(
+export function SearchResults({ totalPrice, results, onAddToWishList }: SearchResultsProps) {
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    return (
+      <div key={key} style={style}>
+        <ProductItem
+          onAddToWishList={onAddToWishList} product={results[index]}
+        />
+      </div>
+    )
+  }
+  return (
     <div>
       <h2>{totalPrice}</h2>
-      {results.map(product => {
-        return (
-          <ProductItem key={product.id} onAddToWishList={onAddToWishList} product={product} />
-        )
-      })}
+      <List
+        height={300}
+        rowHeight={30}
+        width={900}
+        overscanRowCount={10}
+        rowCount={results.length}
+        rowRenderer={rowRenderer}
+      />
     </div>
   );
 }

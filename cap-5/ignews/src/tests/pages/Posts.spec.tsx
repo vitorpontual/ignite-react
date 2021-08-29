@@ -11,6 +11,11 @@ const posts = [
 ]
 
 jest.mock('../../services/prismic.ts')
+jest.mock('next-auth/client', () => {
+  return {
+    useSession: () => [null, false]
+  }
+})
 
 describe('Posts Page', () => {
   it('render correctly', () => {

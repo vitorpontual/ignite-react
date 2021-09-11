@@ -1,0 +1,29 @@
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { addProductToCart } from '../store/modules/cart/action';
+import { IProduct } from '../store/modules/cart/types';
+
+interface CatalogItemProps {
+  product: IProduct;
+}
+
+
+const CatalogItem: React.FC<CatalogItemProps> = ({ product }: CatalogItemProps) => {
+  const dispatch = useDispatch();
+
+  const handleAdddProductTocart = useCallback(() => {
+    dispatch(addProductToCart(product))
+  }, [dispatch, product])
+
+  return (
+    <article key={product.id}>
+      <strong>{product.title}</strong> {" - "}
+      <span>{product.price}</span>{" "}
+
+      <button type='button' onClick={handleAdddProductTocart}>Comprar</button>
+    </article>
+
+  )
+}
+
+export default CatalogItem

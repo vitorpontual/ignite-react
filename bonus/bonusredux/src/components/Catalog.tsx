@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../services/api';
-import { addProductToCart } from '../store/modules/cart/action';
 import { IProduct } from '../store/modules/cart/types';
 import CatalogItem from './CatalogItem';
 
@@ -15,7 +14,6 @@ const Catalog: React.FC = () => {
   }, []);
 
 
-  console.log(catalog)
 
   return (
     <main>
